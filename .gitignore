@@ -1,0 +1,10 @@
+*.tex~
+*.log
+*.log~
+*.out
+*.out~
+*.toc
+*.aux
+*.el
+*.gitignore~
+*.synctex.gz

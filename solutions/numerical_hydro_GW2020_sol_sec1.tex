@@ -1,0 +1,482 @@
+\documentclass[10pt]{article}
+\input{notes_style}
+
+\begin{document}
+\title{Solutions of Numerical Hydrodynamics Exercises}
+\author{Md Arif Shaikh}
+\email{arif.shaikh@icts.res.in}
+\group{Astrophysical Relatvity}
+\institute{\href{https://www.icts.res.in}{International Centre for Theoretical Sciences}, Bengaluru, India.}
+\course{Gravitational Wave Astrophysics Summer School at ICTS-TIFR}
+\instructor{Ian Hawke, STAG, University of Southampton}
+\period{18--22 May, 2020}
+\maketitle
+
+\tableofcontents
+\thispagestyle{empty}
+
+\section{Numerical Methods}
+Find the problem set \href{https://drive.google.com/file/d/1nc5vWHYxZykUQVLmGtItXKbc399mgRxj/view}{here}.
+\label{sec:numerical-methods}
+
+\subsection{The conservation laws}
+\label{sec:conservation-laws}
+
+\begin{enumerate}
+\item The metric can be written as $ds^2 = g_{a b}dx^a dx^b = e^{(m)}_a e^{(n)}_b g_{mn}dx^a dx^b = e^{(m)} e^{(n)} g_{mn}$, where $e^{(m)} = e^{(m)}_a dx^a$. The tetrad is orhthonormal if $g_{mn} = \eta_{mn}$ which implies $ds^2 = e^{(m)} e^{(n)} \eta_{mn}$. Thus we can easily read off the $e^{(m)}$ from the line element $ds^2$.
+  \begin{itemize}
+  \item \underline{Orhthonormal tetrad for Minkowski spacetime in Cartesian coordinates:}
+    The metric has the form
+    \begin{equation}
+      \label{eq:minkowski-cartesian}
+      ds^2 = -dt^2 + dx^2 + dy^2 + dz^2
+    \end{equation}
+    We can easily read off the followings $e^{(0)} = dt, e^{(1)} = dx, e^{(2)} = dy, e^{(3)} = dz$. And hence, using $e^{(m)} = e^{(m)}_a dx^a$, we find
+    \begin{equation}
+      \label{eq:orthonormal-tetrad-minkowski-cartesian}
+      \boxed{e^{(0)}_a = \delta^t_a, e^{(1)}_a = \delta^x_a, e^{(2)}_a = \delta^y_a, e^{(3)}_a = \delta^z_a}.
+    \end{equation}
+
+  \item \underline{Orhthonormal tetrad for Minkowski spacetime in spherical coordinates:} The metric has the form
+    \begin{equation}
+      \label{eq:minkowski-spherical}
+      ds^2 = -dt^2 + dr^2 + r^2(d\theta^2 + \sin^2\theta d\phi^2).
+    \end{equation}
+    So $e^{(0)} = dt, e^{(1)} = dr, e^{(2)} = rd\theta, e^{(3)} = r\sin\theta d\phi$ and
+    \begin{equation}
+      \label{eq:orthonormal-tetrad-minkowski-spherical}
+      \boxed{e^{(0)}_a = \delta^t_a, e^{(1)}_a = \delta^r_a, e^{(2)}_a = r \delta^\theta_a, e^{(3)}_a = r\sin\theta \delta^\phi_a}.
+    \end{equation}
+  \end{itemize}
+\item We have the identity
+  \begin{equation}
+    \label{eq:identity-1}
+    \nabla_a V^a = \frac{1}{\sqrt{-g}}\partial_a\left(\sqrt{-g}V^a\right)
+  \end{equation}
+  and the conservation law $\nabla_a T^a_b=0$. Using these two, we get
+  \begin{equation}
+    \label{eq:1.2-a}
+    \nabla_a\left(T^a_b W^b\right) = T^a_b \nabla_aW^b = \frac{1}{\sqrt{-g}} \partial_a (\sqrt{-g}T^a_b W^b).
+  \end{equation}
+  Thus,
+  \begin{equation}
+    \label{eq:identity-2}
+    \boxed{\partial_a(\sqrt{-g}T^a_b W^b) = \sqrt{-g}T^a_b \nabla_a W^b}.
+  \end{equation}
+\item We choose an orthonormal tetrad $e_{(m)} = \{\partial_t, \partial_j\}$, i.e., $e_{(0)} = \partial_t, e_{(1)} = \partial_x, e_{(2)} = \partial_y, e_{(2)} = \partial_z$. Now we can expand $e_{(m)}$ in the coordinate basis as $e_{(m)} = e^a_{(m)} \partial_a$. So $e^a_{(m)} = \delta^{a}_m$ and hence $\partial_b e^a_{(m)} = 0$ which implies $\nabla_a e^b_{(m)} = \Gamma^b_{ac} e^c_{(m)}$. Setting $W^b = e^b_{(m)}$ in Eq. \ref{eq:identity-2} gives
+  \begin{equation}
+    \label{eq:1.2-c}
+    \boxed{\partial_a(\sqrt{-g}T^a_b e^b_{(m)}) = \sqrt{-g}T^a_b \nabla_a e^b_{(m)} = \sqrt{-g}T^a_b \Gamma^b_{ac}e^c_{(m)}}.
+  \end{equation}
+\item Using $m=0$ and  $e^a_{(m)} = \delta^a_m$ in the r.h.s of Eq. (\ref{eq:1.2-c}) gives
+  \begin{equation}
+    \label{eq:t-comp-consv}
+    \partial_a (\sqrt{-g}T^a_b \delta^{b}_0) = \partial_a (\sqrt{-g}T^a_t) = \partial_t (\sqrt{-g} T^t_t) + \partial_k (\sqrt{-g}T^k_t)
+  \end{equation}
+  and the l.h.s gives
+  \begin{equation}
+    \label{eq:1}
+    \sqrt{-g}T^a_b \Gamma^b_{ac}\delta^c_0 = \sqrt{-g}T^a_b \Gamma^b_{at}
+  \end{equation}
+  which gives
+  \begin{equation}
+    \label{eq:m=0}
+    \boxed{\partial_t (\sqrt{-g} T^t_t) + \partial_k (\sqrt{-g}T^k_t) = \sqrt{-g}T^a_b \Gamma^b_{at}}.
+  \end{equation}
+  and similarly for the spatial components i.e., $m=j$,
+  \begin{equation}
+    \label{eq:m=j}
+    \boxed{\partial_t (\sqrt{-g} T^t_j) + \partial_k (\sqrt{-g}T^k_j) = \sqrt{-g}T^a_b \Gamma^b_{aj}}.
+  \end{equation}
+  Now, in Cartesian coordinates, $\sqrt{-g} = 1$ and  $\Gamma$s are zero. Hence the above two equations could be written in the following form
+  \begin{equation}
+    \label{eq:conservation-cartesian}
+    \boxed{\partial_t\mathbf{q} + \partial_k \mathbf{f}^k(\mathbf{q}) = 0}
+  \end{equation}
+  where $\mathbf{q} = (T^t_t, T^t_j)^T$ and $\mathbf{f} = (T^k_t, T^k_j)^T$.
+\item In spherical coordinates the $\Gamma$s are non-zero and also $e_{(m)}^b$ may not be constant. These result in the source terms. Also $\sqrt{-g} = r^2 \sin\theta \neq 1$. Thus the conservation equation has the following form
+  \begin{equation}
+    \label{eq:conservation-spherical}
+    \boxed{\partial_t \mathbf{q} + \partial_k \mathbf{f}^k(\mathbf{q}) = s(\mathbf{q})}
+  \end{equation}
+  where $\mathbf{q} = (\sqrt{-g}T^t_t, \sqrt{-g}T^t_j)^T$, $\mathbf{f} = (\sqrt{-g}T^k_t, \sqrt{-g}T^k_j)^T$ and $s = \sqrt{-g}T^a_b(\Gamma^b_{at}, \Gamma^b_{a c}e^c_{(j)} + \partial_ae^b_{(j)})^T$ which clearly does not contain any derivative of the matter fields.
+\end{enumerate}
+
+\subsection{The perfect fluid}
+\label{sec:perfect-fluid}
+\begin{enumerate}
+\item For perfect fluid the stress-energy tensor is given by
+  \begin{equation}
+    \label{eq:stress-energy-perfect-fluid}
+    T_{ab} = \rho_0 h u_a u_b + p g_{ab}. 
+  \end{equation}
+  Enthalpy is defined by
+  \begin{equation}
+    \label{eq:enthalpy}
+    h = 1 + \epsilon + \frac{p}{\rho_0}.
+  \end{equation}
+  and the equation of state is given by 
+  \begin{equation}
+    \label{eq:equation-of-state}
+    p = p(\rho_0, \epsilon).
+  \end{equation}
+  Now considering constraint $u^au_a = -1$, we have three independent velocity components and independent variables $\rho_0$ and $\epsilon$ and hence total five unknown independent variables. Therefore there are five degrees of freedom.
+
+\item $n^a = \alpha^{-1}(1, -\beta^i)$, where $\alpha, \beta$ are the lapse and shift and $n^a$ is the unit normal to the spatial slices. We split a four velocity into a piece along $n^a$ and a piece orthogonal to it,
+  \begin{equation}
+    \label{eq:3+1-decomposition}
+    u_a = W(n_a + v_a),\quad n^av_a = 0.
+  \end{equation}
+  Contracting with $u^a$ gives
+  \begin{equation}
+    \label{eq:contract-with-na}
+    n^au_a = W \underbrace{n^a n_a}_{=-1} + W \underbrace{n^av_a}_{=0} =- W \rightarrow \boxed{W = -n^av_a}.
+  \end{equation}
+  From Eq. (\ref{eq:3+1-decomposition}) we have
+  \begin{equation}
+    \label{eq:ua}
+    u^a = W(n^a + v^a) = W(\alpha^{-1}(1, -\beta^i) + (0, v^i)) \rightarrow \boxed{u^a = \frac{W}{\alpha}(1, \alpha v^i - \beta^i)}.
+  \end{equation}
+  From $n^av_a = 0$ we have $v_0 = \beta^i v_i$. Thus,
+  \begin{equation}
+    \label{eq:u_a}
+    u_a = W(n_a + v_a) = W(\alpha(-1,0,0,0) + (\beta^j v_j, v_i)) \rightarrow\boxed{u_a = W (-\alpha + \beta^j v_j, v_i)}.
+  \end{equation}
+  Using Eq. (\ref{eq:ua}) and Eq. (\ref{eq:u_a}) in the normalization condition $u^au_a = -1$ gives
+  \begin{equation}
+    \label{eq:Lorenzt-factor}
+    \boxed{W = \frac{1}{\sqrt{1 - \gamma_{ij}v^i v^j}}}.
+  \end{equation}
+\item Lets start with Eq. \eqref{eq:identity-2} with $W^b = e^b_{(m)}$. This would give
+  \begin{equation}
+    \label{eq:conserved-variable}
+    \textrm{l.h.s} = \partial_t(\sqrt{-g}T^t_b e^b_{(m)}) + \partial_k(\sqrt{-g}T^k_b e^b_{(m)}).
+  \end{equation}
+  So the conserved variable corresponding to $m = 0$ is $\sqrt{-g}T^t_b e^b_{(0)}$ and the flux is $\sqrt{-g}T^k_b e^b_{(0)}$. Now we choose the tetrad and coordinates so that $\mathbf{e} = \{\mathbf{n}, \partial_j\}$. So $e_{(0)} = \mathbf{n}$ and $e_{(j)} = \partial_j$ or $e^a_{(0)} = n^a = g^{ab}n_b = g^{ab}(-\alpha \delta^{0}_b) = -\alpha g^{a0}$. Therefore,
+  \begin{equation}
+    \label{eq:conserved-variable-t}
+    \sqrt{-g}T^t_b e^b_{(0)} = \sqrt{-g}T^t_b (-\alpha)g^{b0} = -\alpha \sqrt{-g}(T^t_t g^{tt} + T^t_i g^{0i})
+  \end{equation}
+  Now, we can write the metric elements in terms the lapse ($\alpha$) and the shift ($\beta^i$). The vector along which time evolves, i.e., the time-coordinate basis vector is decomposed into it's component along the unit normal to the hypersurface ($n^a$) and it's component tangent to the hypersurface ($e^a$). $e^a$ could be further written in terms of the basis vectors on the hypersurface $e^a = \beta^i e^a_i$. So $t^\alpha = \alpha n^\alpha + \beta^i e^\alpha_i$. Therefore we can write
+  \begin{equation}
+    \label{eq:dxalpha}
+    dx^a = t^a dt + e^a_i dx^i = n^a \alpha dt + e^a_i (\beta^i dt + dx^i)
+  \end{equation}
+  which implies
+  \begin{equation}
+    \label{eq:ds2}
+    ds^2  = g_{ab}dx^a dx^b = \alpha^2\underbrace{g_{ab}n^a n^b}_{=-1} dt^2 +  \underbrace{g_{ab}e^a_i e^b_j}_{=\gamma_{ij}}(\beta^{i}\beta^{j}dt^2 + 2\beta^idtdx^j + dx^i dx^j).
+  \end{equation}
+  or
+  \begin{equation}
+    \label{eq:line-element}
+    \boxed{ds^2 = -(\alpha^2 - \beta_i \beta^i)dt^2 + 2\beta_idx^i dt + \gamma_{ij} dx^i dx^j.}
+  \end{equation}
+  So,
+  \begin{equation}
+    \label{eq:metric-in-alpha-beta}
+    \boxed{g_{ab} =
+    \begin{pmatrix}
+      -\alpha^2 + \beta_i \beta^i & \beta_i \\
+      \beta_i & \gamma_{ij}
+    \end{pmatrix}}, \qquad g^{ab} =
+    \begin{pmatrix}
+      -{1/\alpha^2} & {\beta^i}/{\alpha^2}\\
+      \beta^i/\alpha^2 & \gamma^{ij} - \beta^i\beta^j/\alpha^2
+    \end{pmatrix}.
+  \end{equation}
+  Now, $ -1/\alpha^2 = g^{tt} = \textrm{cofactor}(g_{tt})/\det{g_{ab}} = \det(\gamma_{ij})/g$, and therefore $\boxed{\sqrt{-g} = \alpha \sqrt{\gamma}}$.
+  
+  From Eq. \eqref{eq:stress-energy-perfect-fluid}, we have $T^a_b = \rho h u^a u_b + p \delta^a_b$. So, using Eq. \eqref{eq:ua} and \eqref{eq:u_a} we have
+  \begin{equation}
+    \label{eq:Ttt}
+    T^t_t = \rho h u^t u_t + p =  \rho h \frac{W}{\alpha}W(-\alpha + \beta^j v_j) + p = \rho h \frac{W^2}{\alpha}(-\alpha + \beta^j v_j) + p
+  \end{equation}
+  and
+  \begin{equation}
+    \label{eq:Tti}
+    T^t_i = \rho h u^t u_i = \rho h \frac{W}{\alpha}v_i
+  \end{equation}
+  Thus Eq. \eqref{eq:conserved-variable-t} becomes,
+  \begin{align}
+    \label{eq:conserved-variable-tt}
+    \sqrt{-g}T^t_b e^b_{(0)}
+    & = -\alpha \sqrt{-g}\left(-\frac{1}{\alpha^2}\right)\left(\rho h \frac{W^2}{\alpha}(-\alpha + \beta^j v_j) + p - \beta^i\rho h \frac{W}{\alpha}v_i\right)\\
+    & = \alpha^{-1}\sqrt{-g}(- \rho h W^2 + p)\\
+    & = \boxed{- \sqrt{\gamma}E}.
+  \end{align}
+
+  Lets now compute the flux in the $k$ direction for $m=0$ which we showed from Eq. \eqref{eq:conserved-variable} to be given by $\sqrt{-g}T^k_b e^b_{(0)}$ which for $e^b_{(0)} = n^b$ becomes
+  \begin{equation}
+    \label{eq:flux-tj}
+    \sqrt{-g}T^k_b e^b_{(0)} = -\alpha \sqrt{-g} T^k_b g^{b0} = -\alpha\sqrt{-g}(T^k_t g^{tt} + T^k_i g^{it})
+  \end{equation}
+  Now,
+  \begin{equation}
+    \label{eq:Tkt-Tki}
+    \begin{aligned}
+      & T^k_t = \rho h u^k u_t = \rho h \frac{W}{\alpha}(\alpha v^k - \beta^k)W(-\alpha + \beta^j v_j) = \frac{\rho h W^2}{\alpha}(-\alpha^2 v^k + \alpha v^k \beta^j v_j + \alpha \beta^k - \beta^k v_j \beta^j)\\
+      & T^k_i = \rho h u^k u_i + p \delta^k_i = \rho h \frac{W}{\alpha}(\alpha v^k - \beta^k)W v_i + p \delta^k_i = \frac{\rho h W^2}{\alpha}(\alpha v^k v_i - \beta^k v_i) + p \delta^k_i
+  \end{aligned}
+\end{equation}
+Using above equations in Eq. \eqref{eq:flux-tj} with $g^{tt} = -1/\alpha^2, g^{ti} = \beta^i/\alpha^2$ gives
+
+\begin{align}
+  \label{eq:flux-tj-first-form}
+  \sqrt{-g}T^k_b e^b_{(0)}
+  & = - \frac{\sqrt{-g}}{\alpha}(\rho h W^2 (\alpha v^k - \beta^k) + \beta^k p) \\
+  & = - \sqrt{\gamma}((E+p)(\alpha v^k - \beta^k) + \beta^k p)\\
+  & =\boxed{-\sqrt{-g}\left[E\left(v^k - \frac{\beta^k}{\alpha}\right) + p v^k\right]}
+\end{align}
+Alternatively it could be written in the following form also,
+\begin{align}
+  \label{eq:flux-tj-final}
+  \sqrt{-g}T^k_b e^b_{(0)}
+  & = - \frac{\sqrt{-g}}{\alpha}(\rho h W^2 (\alpha v^k - \beta^k) + \beta^k p)\\
+  & = - \sqrt{\gamma}(\beta^k(-\rho h W^2 + p) + \alpha \rho h W^2 v^k)\\
+  & = \boxed{- \sqrt{\gamma}(\alpha S^k - \beta^k E)},
+\end{align}
+where $S^k = \rho h W^2 v^k$.
+
+Now let us compute the conserved variable and the flux along $k$ direction for $m = j$. Again from Eq. \eqref{eq:conserved-variable} we find (with $m=j$) the conserved variable to be $\sqrt{-g}T^t_b e^b_{(j)} = \sqrt{-g}T^t_b \delta^b_{(j)} = \sqrt{-g}T^t_j$. Therefore using Eq. \eqref{eq:Tti} we find
+\begin{equation}
+  \label{eq:Conserved-variable-tj}
+  \boxed{\sqrt{-g}T^t_b e^b_{(j)} = (\sqrt{-g}/\alpha)\rho h W^2 v_j = \sqrt{\gamma} S_j}
+\end{equation}
+Similarly the flux along $k$ is $\sqrt{-g}T^k_b e^b_{(j)} = \sqrt{-g}T^k_b \delta^b_j = \sqrt{-g}T^k_j$. Therefore, using Eq. \eqref{eq:Tkt-Tki} we get
+
+\begin{equation}
+  \label{eq:flux-kj-first-form}
+  \boxed{\sqrt{-g}T^k_b e^b_{(j)} = \sqrt{-g}\left[\frac{\rho h W^2}{\alpha}(\alpha v^k v_j - \beta^k v_j) + p \delta^k_j\right] = \sqrt{-g}\left[S_j\left(v^k - \frac{\beta^k}{\alpha}\right) + p \delta^k_j\right]},
+\end{equation}
+Alternatively we can write in following form,
+\begin{equation}
+  \label{eq:flux-kj}
+  \boxed{\sqrt{-g}T^k_b e^b_{(j)} = \sqrt{-g}\left[\rho h W^2 v^k v_j + p \delta^k_j - \rho h W^2 v_j \beta^k /\alpha\right] = \sqrt{\gamma}(\alpha S^k_j - S_j \beta^k)},
+\end{equation}
+where $S^{ij} = \rho h W^2 v^i v^j + p \gamma^{ij}$.
+\item The mass conservation equation or the so called continuity equation could be written as
+  \begin{align}
+    \label{eq:mass-conservation}
+    & \nabla_a(\rho u^a) = 0 \\
+    & \Rightarrow \partial_a(\sqrt{-g}\rho u^a) = 0 \\
+    & \Rightarrow \partial_t(\sqrt{-g}\rho u^t) + \partial_k (\sqrt{-g}\rho u^k) = 0\\
+    & \Rightarrow \partial_t(\sqrt{-g}\rho\frac{W}{\alpha}) + \partial_k\left[\sqrt{-g}\rho W \left(v^k - \frac{\beta^k}{\alpha}\right)\right]=0\\
+    & \Rightarrow \boxed{\partial_t(\sqrt{\gamma} D) + \partial_k\left[\sqrt{-g} D \left(v^k -\frac{\beta^k}{\alpha}\right)\right] = 0},
+  \end{align}
+  where $D = \rho W$.
+
+  Using the results of the previous questions we can finally cast the conservative expressions of the relativistic-hydrodynamic equations in the compact form
+  \begin{equation}
+    \label{eq:conservative-expressions-relativistic-hydrodynamics}
+    \partial_t(\sqrt{\gamma} \mathbf{q})+\partial_k (\sqrt{\gamma} \mathbf{f}^k(\mathbf{q})) = s(\mathbf{q})
+  \end{equation}
+  where
+  \begin{equation}
+    \label{eq:conservative-variables-and-fluxes}
+    \mathbf{q} :=
+    \begin{pmatrix}
+      D \\
+      S_j\\
+      E
+    \end{pmatrix},\qquad
+    \mathbf{f}^k := \begin{pmatrix}
+      D \left(v^k -\frac{\beta^k}{\alpha}\right)\\
+      S_j\left(v^k - \frac{\beta^k}{\alpha}\right) + p \delta^k_j\\
+      E\left(v^k - \frac{\beta^k}{\alpha}\right) + p v^k
+    \end{pmatrix}\equiv
+    \begin{pmatrix}
+      D \left(v^k -\frac{\beta^k}{\alpha}\right)\\
+      S^k_j - S_j \frac{\beta^k}{\alpha}\\
+      S^k - E \frac{\beta^k}{\alpha}
+    \end{pmatrix}
+  \end{equation}
+
+\item We can set $\alpha = 1, \beta^i = 0$ to make $ds^2$ in Eq. \eqref{eq:ds2} Minkowskian. From Eq. \eqref{eq:conservative-variables-and-fluxes} we immediately get
+  \begin{equation}
+    \label{eq:flux_minkowskian}
+    \mathbf{f}^k =
+    \begin{pmatrix}
+      D v^k\\
+      S_jv^k + p \delta^k_j\\
+      (E + p)v^k
+    \end{pmatrix}
+  \end{equation}
+  and Eq. \eqref{eq:conservative-expressions-relativistic-hydrodynamics} becomes (in Cartesian coordinate the $\Gamma$s are zero for Minkowski spacetime and hence the source term vanish)
+  \begin{equation}
+    \label{eq:conservative-expressions-minkowskian}
+    \partial_t
+    \boxed{\begin{pmatrix}
+      D\\
+      S_j\\
+      E
+    \end{pmatrix} + \partial_k
+    \begin{pmatrix}
+      D v^k\\
+      S_jv^k + p \delta^k_j\\
+      (E + p)v^k
+    \end{pmatrix} = 0}
+  \end{equation}
+  where we have used $\gamma = 1$ for Minkowskian spacetime.
+
+  \underline{In slow motion approximation ($v\ll 1, \epsilon + p/\rho_0 \ll 1$)}
+  \begin{equation}
+    \label{eq:D-in-slow-motion}
+    W = \frac{1}{\sqrt{1 - v_i v^i}} \approx 1 + \frac{1}{2}v_i v^i, W^2\approx 1 + v_i v^i, h \approx 1
+  \end{equation}
+  Therefore we can make the following approximation,
+  \begin{equation}
+    \label{eq:slow-motion-minkowskian}
+    \begin{aligned}
+      & D = \rho_0 W \approx \rho_0 \\
+      & Dv^k = \rho_0 W v^k \approx \rho_0 v^k\\
+      & S_j = \rho_0 h W^2 v_j \approx \rho_0 v_j \\
+      & S_jv^k + p \delta^k_j = \rho_0 h W^2 v_j v^k + p \delta^k_j \approx \rho_0 v_j v^k + p\delta^k_j\\
+      & E = \rho_0 h W^2 - p \approx \rho_0 (1 + \epsilon + p/\rho_0)(1 + v_i v^i) - p \approx \rho_0(1 + \epsilon + v_i v^i)
+    \end{aligned}
+  \end{equation}
+  Thus in slow approximation limit Eq. \eqref{eq:conservative-expressions-minkowskian} becomes
+  \begin{equation}
+    \label{eq:slow-motion-conservative-expressions-1}
+    \partial_t
+    \begin{pmatrix}
+      \rho_0\\
+      \rho_0 v_j \\
+      \rho_0(1 + \epsilon + v_iv^i)
+    \end{pmatrix} + \partial_k
+    \begin{pmatrix}
+      \rho_0 v^k \\
+      \rho_0 v_j v^k + p\delta^k_j\\
+      (\rho_0(1 + \epsilon + v_i v^i) + p)v^k
+    \end{pmatrix} = 0
+  \end{equation}
+  As we can see, the Newtonian continuity and momentum conservation equation are recovered but the energy equation is not recovered correctly.
+
+\item So lets go back to our SR equation in Eq. \eqref{eq:conservative-expressions-minkowskian} define $\tau = E - D$. Then We can have an equation of $\tau$ instead of $E$ and we can write conservative expressions as
+  \begin{equation}
+    \label{eq:conservative-expressions-in-tau}
+    \partial_t
+    \begin{pmatrix}
+      D\\
+      S_j\\
+      \tau
+    \end{pmatrix} + \partial_k
+    \begin{pmatrix}
+      D v^k\\
+      S_jv^k + p \delta^k_j\\
+      (\tau + p)v^k
+    \end{pmatrix} = 0
+  \end{equation}
+  In slow motion limit $\tau \approx \rho_0(1 + \epsilon + v_i v^i) - \rho_0 (1 + (1/2)v_iv^i) \approx \rho_0(\epsilon + (1/2)v_i v^i)$ and Eq. \eqref{eq:conservative-expressions-in-tau} becomes
+    \begin{equation}
+    \label{eq:conservative-expressions-in-tau-slow-motion-limit}
+    \boxed{\partial_t
+    \begin{pmatrix}
+      \rho_0\\
+      \rho_0 v_j \\
+      \rho_0(\epsilon + \frac{1}{2}v_i v^i)
+    \end{pmatrix} + \partial_k
+    \begin{pmatrix}
+      \rho_0 v^k \\
+      \rho_0 v_j v^k + p\delta^k_j\\
+      (\rho_0(\epsilon + \frac{1}{2}v_i v^i) + p)v^k
+    \end{pmatrix} = 0}
+  \end{equation}
+  and we recover the correct set of equations in the leading order.
+\end{enumerate}
+
+
+\subsection{Action principles}
+\label{sec:action-principles}
+The flux four-vector is defined as $n^a = n u^a$ where $u^a$ is the four-velocity. $n$ is related to the specific rest mass density as $\rho_0 = m_b n$ where $m_b$ is the mass per particle.
+\begin{enumerate}
+\item Let the action be given by $S = \int d^4x\sqrt{-g} \Lambda (n)$ where $\Lambda(n)$ is function of the number density $n$ only. So $\delta S = \int d^4x\sqrt{-g}\delta \Lambda = \int d^4x \sqrt{-g} (\partial \Lambda/\partial n^a)\delta n^a$ with the spacetime fixed. Thus the $\delta S = 0$ implies $\boxed{\mu_a := \partial \Lambda/\partial n^a = 0}$.
+
+\item To ensure that the number flux is conserved we use $\nabla_a n^a = 0$, Thus we modify the Lagrangian to accomodate this constraint using Lagrange multiplier
+  \begin{equation}
+    \label{eq:Lagrangian-with-Lagrange-multiplier}
+    S = \int d^4x \sqrt{-g}\left[\Lambda(n) + \lambda \nabla_a n^a\right]
+  \end{equation}
+  Now we vary the action
+  \begin{align}
+    \label{eq:vary-action-Lagrange-multiplier}
+    \delta S
+    & = \int d^4x \sqrt{-g}\left[\frac{\partial \Lambda}{\partial n^a}\delta n^a + \delta \lambda \nabla_a n^a + \lambda \nabla_a \delta n^a\right]\\
+    & = \int d^4 x\sqrt{-g} \left[\frac{\partial \Lambda}{\partial n^a}\delta n^a + \nabla_a(\lambda \delta n^a) - \nabla_a \lambda \delta n^a + \nabla_a n^a\delta \lambda\right]\\
+    & = \int d^4x \sqrt{-g} \left[\left(\mu_a - \nabla_a\lambda\right)\delta n^a + \nabla_a n^a \delta \lambda + \nabla_a(\lambda \delta n^a)\right]
+  \end{align}
+  The last term is a four-divergence and  goes away after integration and we have the set of e.o.m
+  \begin{equation}
+    \label{eq:set-of-eom}
+    \begin{aligned}
+      & \mu_a - \partial_a \lambda = 0\\
+      & \nabla_a n^a = 0
+    \end{aligned}
+  \end{equation}
+  The last one basically reproduces the number flux conservation. By operating covariant derivative on the first equation gives $\nabla_b \mu_a - \nabla_b\partial_a\lambda = 0$. Interchanging $a\leftrightarrow b$ and substracting gives
+  \begin{equation}
+    \label{eq:irrotationality}
+    \nabla_a\mu_b - \nabla_b \mu_a = 0 \Rightarrow \boxed{\omega_{ab} = \nabla_{[a}\mu_{b]} = 0}
+  \end{equation}
+  $\omega_{ab}$ is the vorticity and fluid which obeys $\omega_{ab} = 0$ is called irrotational fluid.
+
+\item However, we want to impose that the variaons act to perturb the flow lines normal to themselves. This imposes that
+  \begin{equation}
+    \label{eq:delta-na}
+    \delta n^a = -\mathcal{L}_{\xi} n^a - n^a \nabla_b \xi^b = - \xi^b \nabla_b n^a + n^b\nabla_b \xi^a - n^a \nabla_b \xi^b = - \nabla_b(n^a \xi^b) + \nabla_b(n^b \xi^a)
+  \end{equation}
+  where we have used $\nabla_a n^a = 0$. Now let rewrite the variation of action $S = \int d^4x \sqrt{-g} \Lambda$ in terms of $\xi^a$. We have
+  \begin{align}
+    \label{eq:variation-of-action-with-xi}
+    \delta S
+    & = \int d^4x \sqrt{-g} \mu_a \delta n^a \\
+    & = \int d^4x \sqrt{-g}\left[\mu_a \left(- \nabla_b(n^a \xi^b) + \nabla_b(n^b \xi^a)\right)\right]\\
+    & = \int d^4x \sqrt{-g} \left[-\nabla_b(\mu_a n^a \xi^b) + \xi^b n^a \nabla_b \mu_a + \nabla_b(\mu_a n^b \xi^a) - n^b\xi^a \nabla_b \mu_a\right]\\
+    & = \int d^4x \sqrt{-g} \left[\nabla_b(\mu_a(n^b\xi^a - n^a\xi^b)) + \xi^b n^a(\nabla_b \mu_a-\nabla_a\mu_b)\right]\\
+    & \int d^4x \sqrt{-g} \xi^b n^a \omega_{ba} + \textrm{Boundary terms}
+  \end{align}
+  So we get the e.o.m to be
+  \begin{equation}
+    \label{eq:eom-single}
+    \boxed{f_b := n^a\omega_{ab} = 0}
+  \end{equation}
+
+\item Equating $\Lambda = -\rho$, (where $\rho (n)$ is the energy density) we have $\delta \rho = - \mu_a \delta n^a$. Now we use the relation between the enthalpy, energy and pressure which is given by $n \mu = (\rho + p)$. Taking differential of both sides give $\boxed{\delta p = - n^a \delta \mu_a}$.
+
+\item Now $\Lambda$ is function of $n_x^2, n_{xy}$ with $x={1,2}$ where $n_x$ is the number density of species $x$ and $n^2_{12} = - g_{ab}n^a_1 n^b_2$. Variation of $\Lambda$ would be given by
+  \begin{align}
+    \label{eq:variation-lambda-two-fluid}
+    \delta \Lambda
+    &  = \frac{\partial \Lambda}{\partial n_1^2}\delta n_1^2 + \frac{\partial \Lambda}{\partial n_2^2}\delta n_2^2 + \frac{\partial \Lambda}{\partial n_{12}^2}\delta n_{12}^2\\
+    & = \left(-2 \frac{\partial \Lambda}{\partial n_1^2}\right)g_{ab}n_1^a\delta n_1^b
+      + \left(-2 \frac{\partial \Lambda}{\partial n_2^2}\right)g_{ab}n_2^a\delta n_2^b
+      + \left(-\frac{\partial \Lambda}{\partial n_{12}^2}\right)(g_{ab}n_1^a\delta n_2^b + g_{ab}\delta n_1^b n_2^a)\\
+    & = \mathcal{B}^1g_{ab}n_1^a \delta n_1^b + \mathcal{B}^2g_{ab}n_2^a \delta n_2^b
+      + \mathcal{A}^{12}(g_{ab}n_1^a\delta n_2^b + g_{ab}\delta n_1^b n_2^a),\quad \mathcal{B}^x := -2 \frac{\partial\Lambda}{\partial n_x^2},\mathcal{A}^{xy} = -\frac{\partial\Lambda}{\partial n_{xy}^2}\\
+    & = \left(\mathcal{B}^1 n^a_1 + \mathcal{A}^{12}n_2^a\right)g_{ab}\delta n^b_1
+      + \left(\mathcal{B}^2n_2^a + \mathcal{A}^{12}n_1^a\right)g_{ab}\delta n_2^b\\
+    & = \sum_{x} \left(\mathcal{B}^x n^a_x + \mathcal{A}^{xy}n_y^a\right)g_{ab}\delta n^b_x\\
+    & = \sum_{x} \mu_a^x \delta n_x^a,\qquad \textrm{where}\quad \mu_b^x:= \left(\mathcal{B}^x n^a_x + \mathcal{A}^{xy}n_y^a\right)g_{ab}
+    \label{eq:conjugate-momentum-two-fluid}\\
+    & = \sum_{x} \mu^x_a \left[\nabla_b\left(n_x^b \xi^a_x - n^a_x \xi^b_x\right)\right]\qquad \textrm{using Eq \eqref{eq:delta-na}}\\
+    & = \sum_{x} \nabla_b\left[\mu^x_a\left(n_x^b \xi^a_x - n^a_x \xi^b_x\right)\right] + \left(n_x^b \xi^a_x - n^a_x \xi^b_x\right) \nabla_b\mu^x_a \\
+    & = \sum_{x} \nabla_b\left[\mu^x_a\left(n_x^b \xi^a_x - n^a_x \xi^b_x\right)\right] + n^a_x \left(\nabla_b \mu^x_a - \nabla_a \mu^x_b\right)\xi^b_x\\
+    & = \sum_{x} \nabla_b\left[\mu^x_a\left(n_x^b \xi^a_x - n^a_x \xi^b_x\right)\right] - n_x^a \omega^x_{ab} \xi^b_x
+  \end{align}
+
+  So the variation of action becomes
+  \begin{equation}
+    \label{eq:variaons-action-two-fluid}
+    \delta S = \int d^4x \sqrt{-g} \delta \Lambda = \textrm{B.T} - \int d^4x \sqrt{-g}\sum_{x} f_b^x \xi^b_x
+  \end{equation}
+So the equations of motion are given by $\boxed{f^x_b = n^a_x\omega^x_{ab} = 0}$.
+\item Conjugate momentum $\mu_a^x$ of $n^x_a$ is given by Eq. \eqref{eq:conjugate-momentum-two-fluid}, $\mu_a^x = g_{ab}(\mathcal{B}^x n_x^b + \mathcal{A}^{xy}n^b_y)$. So the conjugate momentum of species $x$ is only parallel to its number flux if
+  \begin{align}
+    \label{eq:condition-for-parallel-to-its-number-flux}
+    \mathcal{A}^{xy}
+    & = -\frac{\partial \Lambda}{\partial n^2_{xy}} = 0 
+  \end{align}
+  or, $\boxed{\frac{\partial \Lambda}{\partial n^a_1 \partial n_2^b} = 0}$.
+\end{enumerate}
+
+\end{document}

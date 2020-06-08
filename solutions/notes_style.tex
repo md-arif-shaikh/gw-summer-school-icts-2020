@@ -1,0 +1,71 @@
+\usepackage{titlesec}
+\usepackage{titling}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true, urlcolor=MidnightBlue, linkcolor=Magenta]{hyperref}
+\usepackage{amsmath}
+\usepackage[margin=1in]{geometry}
+\usepackage{libertine}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\leftmark}
+\fancyhead[RE,LO]{\rightmark}
+\fancyfoot[RE,LO]{\itshape ICTS GW Summer School 2020: Solutions of Numerical Hydrodynamics Exercises}
+\fancyfoot[LE,RO]{\thepage/\pageref{LastPage}}
+\renewcommand{\footrulewidth}{1pt}
+
+\titleformat{\section}
+{\large \bfseries}
+{}
+{0em}
+{}[\titlerule]
+
+\titleformat{\subsection}[hang]
+{\bfseries}
+{}
+{0em}
+{}
+
+\makeatletter
+\newcommand\institute[1]{\renewcommand\@institute{#1}}
+\newcommand\@institute{}
+
+
+\newcommand\group[1]{\renewcommand\@group{#1}}
+\newcommand\@group{}
+
+
+\newcommand\period[1]{\renewcommand\@period{#1}}
+\newcommand\@period{}
+
+
+\newcommand\course[1]{\renewcommand\@course{#1}}
+\newcommand\@course{}
+
+\newcommand\instructor[1]{\renewcommand\@instructor{#1}}
+\newcommand\@instructor{}
+
+\newcommand\email[1]{\renewcommand\@email{#1}}
+\newcommand\@email{}
+
+\renewcommand{\maketitle}{%
+  \begin{flushleft}
+    {\scshape \Large \bfseries \@title}\\
+    {\@course,\@period}
+
+    \vspace{0.1cm}
+
+    {Instructor: \@instructor}
+
+    \vspace{0.2cm}
+    
+    {\@author, \@group, \href{mailto:\@email}{\@email}}
+    
+    \vspace{0.1cm}
+    
+    {\@institute}
+    \rule{\textwidth}{1pt}
+  \end{flushleft}
+}
+\makeatother
